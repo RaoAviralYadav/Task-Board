@@ -31,7 +31,6 @@ function Board() {
   return (
     <div className="board-wrapper">
       {/* Sidebar rendered here */}
-      {/* <Sidebar isOpen={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} /> */}
 
       {/* Page Content */}
       <div className={`board-page-container ${sidebarOpen ? 'with-sidebar' : 'full-width'}`}>
