@@ -51,7 +51,6 @@ export default function Kanban() {
   // 🗑️ Delete column handler
   const deleteColumn = (columnId) => {
     // Optional: prevent deleting default columns
-    // if (["todo", "inprogress", "done"].includes(columnId)) return;
 
     setStatuses((prev) => prev.filter((s) => s.id !== columnId));
     setColumns((prev) => {
