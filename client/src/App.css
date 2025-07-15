@@ -1,0 +1,54 @@
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #656769;
+}
+
+.home-page {
+  height: calc(100vh - 60px); /* navbar height subtraction */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #1e2a38;
+  width: 100%;
+}
+.home-page h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.btn-group {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.home-btn {
+  padding: 10px 24px;
+  font-size: 16px;
+  background-color: #1e2a38;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.home-btn:hover {
+  background-color: #00bcd4;
+  transform: scale(1.05);
+  color: #1e2a38;
+}

@@ -1,0 +1,124 @@
+/* Container */
+.kanban-page {
+  padding: 1.5rem;
+  background-color: #fff;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.kanban-header {
+  margin-bottom: 1rem;
+}
+.kanban-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Columns wrapper */
+.kanban-columns {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+/* Single column */
+.kanban-column {
+  background: #f8f9fa;
+  border-radius: 8px;
+  width: 280px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* Column title */
+.kanban-column h3 {
+  margin: 0 0 0.75rem;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Task card */
+.kanban-card {
+  background: #ffffff;
+  border-radius: 5px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: grab;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  transition: transform 0.2s ease, background-color 0.2s, color 0.2s;
+}
+
+/* Hover effect */
+.kanban-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  background-color: #00bcd4;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Add card input */
+.add-task-box {
+  margin-top: auto;
+}
+.add-task-box input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+/* “Add List” column */
+.add-list-column {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.add-list-column input {
+  padding: 0.5rem;
+  border: 1px dashed #888;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.add-list-column button {
+  padding: 0.5rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.add-list-column button:hover {
+  background: #0056b3;
+}
+
+.kanban-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-column-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.delete-column-btn:hover {
+  color: red;
+}

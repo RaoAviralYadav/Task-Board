@@ -1,0 +1,67 @@
+.home-page {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  background-color: #f4f5f7;
+}
+
+.home-container {
+  text-align: center;
+  max-width: 600px;
+  background-color: white;
+  padding: 50px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.home-container h1 {
+  font-size: 42px;
+  color: #1e2a38;
+  margin-bottom: 12px;
+}
+
+.home-container .highlight {
+  color: #00bcd4;
+}
+
+.home-container p {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 32px;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.home-btn {
+  padding: 10px 24px;
+  font-size: 16px;
+  background-color: #1e2a38;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.home-btn:hover {
+  background-color: #00bcd4;
+  transform: scale(1.05);
+  color: #1e2a38;
+}
+
+.home-btn-outline {
+  background-color: transparent;
+  color: #1e2a38;
+  border: 2px solid #1e2a38;
+}
+
+.home-btn-outline:hover {
+  background-color: #1e2a38;
+  color: white;
+}
