@@ -165,14 +165,6 @@ export default function Kanban() {
                   {columns[id]?.map((task, idx) => (
                     <Draggable key={task._id} draggableId={task._id} index={idx}>
                       {(prov) => (
-                        // <div
-                        //   className="kanban-card"
-                        //   ref={prov.innerRef}
-                        //   {...prov.draggableProps}
-                        //   {...prov.dragHandleProps}
-                        // >
-                        //   {task.title}
-                        // </div>
                         <div
                           className="kanban-card"
                           ref={prov.innerRef}
