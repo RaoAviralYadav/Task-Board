@@ -6,12 +6,10 @@ import "./Kanban.css";
 import StrictModeDroppable from "../components/StrictModeDroppable";
 import TaskModal from "../components/TaskModal";
 
-
 export default function Kanban() {
   const [selectedTask, setSelectedTask] = useState(null);
   const { groupId } = useParams();
 
-  // Default statuses
   const defaultStatuses = [
     { id: "todo", title: "To Do" },
     { id: "inprogress", title: "In Progress" },
@@ -25,10 +23,10 @@ export default function Kanban() {
       return acc;
     }, {})
   );
-  const [newTaskTitle, setNewTaskTitle] = useState("");
+
+  const [newTaskTitles, setNewTaskTitles] = useState({});
   const [newListName, setNewListName] = useState("");
 
-  // Fetch tasks when groupId/statuses change
   useEffect(() => {
     const fetchTasks = async () => {
       const res = await API.get(`/tasks/group/${groupId}`);
@@ -37,7 +35,6 @@ export default function Kanban() {
         base[s.id] = [];
       });
       res.data.forEach((task) => {
-        // Only use tasks that match current statuses
         if (statuses.find((s) => s.id === task.status)) {
           base[task.status].push(task);
         }
@@ -48,10 +45,7 @@ export default function Kanban() {
     fetchTasks();
   }, [groupId, statuses]);
 
-  // 🗑️ Delete column handler
   const deleteColumn = (columnId) => {
-    // Optional: prevent deleting default columns
-
     setStatuses((prev) => prev.filter((s) => s.id !== columnId));
     setColumns((prev) => {
       const updated = { ...prev };
@@ -60,34 +54,27 @@ export default function Kanban() {
     });
   };
 
-  // Drag & Drop Handler
   const onDragEnd = async (result) => {
     const { source, destination } = result;
     if (!destination) return;
 
-    // Avoid unnecessary updates if dropped in same place
     if (
       source.droppableId === destination.droppableId &&
       source.index === destination.index
-    ) {
-      return;
-    }
+    ) return;
 
     const sourceColumn = [...columns[source.droppableId]];
     const destColumn = [...columns[destination.droppableId]];
     const movedTask = sourceColumn[source.index];
 
-    // Moving within the same column
     if (source.droppableId === destination.droppableId) {
       sourceColumn.splice(source.index, 1);
       sourceColumn.splice(destination.index, 0, movedTask);
-
       setColumns((prev) => ({
         ...prev,
         [source.droppableId]: sourceColumn,
       }));
     } else {
-      // Moving to a different column
       const updatedTask = { ...movedTask, status: destination.droppableId };
       sourceColumn.splice(source.index, 1);
       destColumn.splice(destination.index, 0, updatedTask);
@@ -106,28 +93,41 @@ export default function Kanban() {
     }
   };
 
-  // Create a new task
   const createTask = async (status) => {
-    if (!newTaskTitle.trim()) return;
-    const task = { title: newTaskTitle, status, groupId, priority: "medium" };
+    const title = (newTaskTitles[status] || "").trim();
+    if (!title) return;
+
+    // 🚫 Validate against column titles (user-facing), not just IDs
+    const forbiddenTitles = statuses.map(s => s.title.toLowerCase());
+    if (forbiddenTitles.includes(title.toLowerCase())) {
+      alert("⚠️ Task title cannot match a column name.");
+      return;
+    }
+
+    const task = { title, status, groupId, priority: "medium" };
+
     try {
       const res = await API.post("/tasks", task);
       setColumns((prev) => ({
         ...prev,
         [status]: [...prev[status], res.data],
       }));
-      setNewTaskTitle("");
+      setNewTaskTitles((prev) => ({ ...prev, [status]: "" }));
     } catch (err) {
-      console.error("Failed to create task", err);
+      if (err.response?.status === 409) {
+        alert("⚠️ A task with this title already exists in this group.");
+      } else {
+        alert("Failed to create task.");
+      }
     }
   };
 
-  // Add a new column/list
+
   const addList = () => {
     const name = newListName.trim();
     if (!name) return;
     const id = name.toLowerCase().replace(/\s+/g, "-");
-    if (statuses.some((s) => s.id === id)) return; // Avoid duplicates
+    if (statuses.some((s) => s.id === id)) return;
 
     setStatuses((prev) => [...prev, { id, title: name }]);
     setColumns((prev) => ({ ...prev, [id]: [] }));
@@ -150,7 +150,6 @@ export default function Kanban() {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {/* ⬇️ Header with delete button */}
                   <div className="kanban-column-header">
                     <h3>{title}</h3>
                     <button
@@ -170,23 +169,26 @@ export default function Kanban() {
                           ref={prov.innerRef}
                           {...prov.draggableProps}
                           {...prov.dragHandleProps}
-                          onClick={() => setSelectedTask(task)} // ← SHOW MODAL
+                          onClick={() => setSelectedTask(task)}
                         >
                           {task.title}
                         </div>
-
                       )}
                     </Draggable>
                   ))}
                   {provided.placeholder}
 
-                  {/* Add card input */}
                   <div className="add-task-box">
                     <input
                       type="text"
                       placeholder="Add a card"
-                      value={newTaskTitle}
-                      onChange={(e) => setNewTaskTitle(e.target.value)}
+                      value={newTaskTitles[id] || ""}
+                      onChange={(e) =>
+                        setNewTaskTitles((prev) => ({
+                          ...prev,
+                          [id]: e.target.value,
+                        }))
+                      }
                       onKeyDown={(e) => e.key === "Enter" && createTask(id)}
                     />
                   </div>
@@ -195,7 +197,6 @@ export default function Kanban() {
             </StrictModeDroppable>
           ))}
 
-          {/* Add new list */}
           <div className="add-list-column">
             <input
               type="text"
@@ -208,6 +209,7 @@ export default function Kanban() {
           </div>
         </div>
       </DragDropContext>
+
       {selectedTask && (
         <TaskModal
           task={selectedTask}
@@ -230,7 +232,6 @@ export default function Kanban() {
           }}
         />
       )}
-
     </div>
   );
 }
