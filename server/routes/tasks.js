@@ -21,15 +21,47 @@ router.post("/", auth, async (req, res) => {
 });
 
 // Update task status/assignment
+// router.put("/:id", auth, async (req, res) => {
+//   // try {
+//   //   const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+//   //     new: true,
+//   //   });
+//   //   res.json(task);
+//   // } catch (err) {
+//   //   res.status(400).json({ message: "Update failed" });
+//   // }
+//   try {
+//     const { title, description, status } = req.body;
+
+//     const task = await Task.findById(req.params.id);
+//     if (!task) return res.status(404).json({ error: "Task not found" });
+
+//     const updates = [];
+//     if (title && title !== task.title) {
+//       updates.push({ user: "Aviral Yadav", action: "Updated title", timestamp: Date.now() });
+//       task.title = title;
+//     }
+//     if (description && description !== task.description) {
+//       updates.push({ user: "Aviral Yadav", action: "Updated description", timestamp: Date.now() });
+//       task.description = description;
+//     }
+//     if (status && status !== task.status) {
+//       updates.push({ user: "Aviral Yadav", action: `Moved to ${status}`, timestamp: Date.now() });
+//       task.status = status;
+//     }
+
+//     // Add to activity
+//     task.activity.push(...updates);
+
+//     await task.save();
+//     res.json(task);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Update failed" });
+//   }
+// });
+
 router.put("/:id", auth, async (req, res) => {
-  // try {
-  //   const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
-  //     new: true,
-  //   });
-  //   res.json(task);
-  // } catch (err) {
-  //   res.status(400).json({ message: "Update failed" });
-  // }
   try {
     const { title, description, status } = req.body;
 
@@ -37,20 +69,20 @@ router.put("/:id", auth, async (req, res) => {
     if (!task) return res.status(404).json({ error: "Task not found" });
 
     const updates = [];
+
     if (title && title !== task.title) {
-      updates.push({ user: "Aviral Yadav", action: "Updated title", timestamp: Date.now() });
+      updates.push({ user: req.user.name, action: "Updated title", timestamp: Date.now() });
       task.title = title;
     }
     if (description && description !== task.description) {
-      updates.push({ user: "Aviral Yadav", action: "Updated description", timestamp: Date.now() });
+      updates.push({ user: req.user.name, action: "Updated description", timestamp: Date.now() });
       task.description = description;
     }
     if (status && status !== task.status) {
-      updates.push({ user: "Aviral Yadav", action: `Moved to ${status}`, timestamp: Date.now() });
+      updates.push({ user: req.user.name, action: `Moved to ${status}`, timestamp: Date.now() });
       task.status = status;
     }
 
-    // Add to activity
     task.activity.push(...updates);
 
     await task.save();
@@ -60,6 +92,7 @@ router.put("/:id", auth, async (req, res) => {
     res.status(500).json({ error: "Update failed" });
   }
 });
+
 
 
 

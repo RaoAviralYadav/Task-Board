@@ -1,16 +1,18 @@
+
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://localhost:5000/api", // or your deployed URL
 });
 
-// Optional: Automatically attach token
-API.interceptors.request.use((req) => {
+// 🛡️ Add token to all requests automatically
+API.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
-    req.headers.authorization = token;
+    config.headers["Authorization"] = token;
   }
-  return req;
+  return config;
 });
 
 export default API;
+
