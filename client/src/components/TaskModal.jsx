@@ -164,7 +164,10 @@ function TaskModal({ task, onClose, onSave }) {
   return (
     <div className="modal-overlay">
       <div className="modal-container">
-        <button className="close-btn" onClick={onClose}>✖</button>
+        <button className="close-btn" onClick={onClose} aria-label="Close">
+          &times;
+        </button>
+
 
         <div className="modal-tabs">
           <button className={activeTab === "details" ? "active" : ""} onClick={() => setActiveTab("details")}>📝 Details</button>
