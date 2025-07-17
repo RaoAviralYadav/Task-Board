@@ -160,3 +160,30 @@
 }
 
 
+/* Board hover like Kanban tasks */
+.board-hover:hover {
+  background-color: #00bcd4;
+  color: white;
+  transform: translateY(-4px);
+  transition: all 0.5s ease;
+}
+
+.board-hover:hover h3,
+.board-hover:hover .subtext {
+  color: white;
+}
+
+/* Delete Group Button */
+.delete-group-btn {
+  background: transparent;
+  border: none;
+  color: red;
+  font-size: 16px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: transform 0.2s ease;
+}
+
+.delete-group-btn:hover {
+  transform: scale(1.1);
+}
