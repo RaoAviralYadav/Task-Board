@@ -1,20 +1,43 @@
-# 🧠 Real-Time Collaborative To-Do Board (Trello Clone)
+# ✅ Real-Time Collaborative Kanban Board
 
-A full-stack web application that lets users manage tasks collaboratively in real-time. Built with **React**, **Node.js**, **Express**, **MongoDB**, and **Socket.IO**, the app allows multiple users to log in, create and assign tasks, track activity, and experience seamless updates without refreshing—just like Trello, but better.
+A **full-stack web application** built to enable **multiple users** to manage tasks on a shared Kanban-style board in **real time**. Inspired by tools like Trello, this clone goes beyond static task tracking—offering smart assignment, live sync via WebSockets, and intelligent conflict resolution between users.
 
-> 🔴 Live Demo: [https://your-frontend-url.vercel.app](https://your-frontend-url.vercel.app)  
-> ⚙️ Backend: [https://your-backend-url.onrender.com](https://your-backend-url.onrender.com)  
-> 🎥 Demo Video: [https://your-demo-video-link](https://your-demo-video-link)  
-> 📄 Logic Document: [Logic_Document.md](./Logic_Document.md)
+<br/>
+
+> 🌐 **Live App**: [https://your-live-app.vercel.app](https://your-live-app.vercel.app)  
+> 🛠️ **Backend API**: [https://your-backend-api.render.com](https://your-backend-api.render.com)  
+> 📺 **Demo Video**: [https://your-demo-video-link](https://your-demo-video-link)  
+> 📄 **Logic Explanation**: [Logic_Document.md](./Logic_Document.md)
 
 ---
 
-## 📦 Tech Stack
+## 📝 Project Overview
 
-| Frontend              | Backend               | Real-Time           | Database        |
-|----------------------|-----------------------|---------------------|-----------------|
-| React + Vite         | Node.js + Express     | Socket.IO           | MongoDB (Atlas) |
-| React DnD / Context  | JWT Auth + bcrypt     | WebSocket Protocol  | Mongoose ODM    |
+This project is a **real-time collaborative To-Do board** where users can:
+- Log in/register securely
+- Create and manage tasks
+- See changes live across all connected users
+- Assign tasks automatically via Smart Assign
+- Resolve simultaneous edits using conflict handling
+- Track task history with an activity log
+
+It was built as part of a coding assignment with emphasis on:
+- **No template libraries** (pure React styling)
+- **WebSocket integration**
+- **Unique business logic**: Smart assign, conflict handling, validations
+
+---
+
+## 🧰 Tech Stack Used
+
+| Layer       | Technology           | Purpose                             |
+|-------------|----------------------|-------------------------------------|
+| Frontend    | React + Vite         | UI + state management               |
+| Backend     | Node.js + Express    | API server + authentication         |
+| Database    | MongoDB + Mongoose   | Task and user storage               |
+| Real-Time   | Socket.IO            | Bi-directional WebSocket sync       |
+| Auth        | JWT + bcrypt         | Secure login & session management   |
+| Hosting     | Vercel + Render      | Deployment of frontend & backend    |
 
 ---
 
@@ -72,8 +95,14 @@ A full-stack web application that lets users manage tasks collaboratively in rea
 - Vite or npm to run React
 
 ---
+## ⚙️ Setup & Installation Instructions
 
-### 1. Clone the Repo
+### 📂 Clone the Repo
+
 ```bash
+git clone https://github.com/your-username/realtime-kanban.git
+cd realtime-kanban
+
+
 git clone https://github.com/your-username/realtime-todo-board.git
 cd realtime-todo-board
