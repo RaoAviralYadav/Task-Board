@@ -7,20 +7,23 @@ import Board from "./pages/Board.jsx"; // Placeholder
 import Home from "./pages/Home.jsx";
 import './App.css';
 import Kanban from './pages/Kanban';
+import { ToastProvider } from "./components/ToastContext";
 
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />        
-        <Route path="/login" element={<Login />} />  
-        <Route path="/register" element={<Register />} />
-        <Route path="/board" element={<Board />} />
-        <Route path="/board/:groupId" element={<Kanban />} />
-      </Routes>
-    </Router>
+    <ToastProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/board" element={<Board />} />
+          <Route path="/board/:groupId" element={<Kanban />} />
+        </Routes>
+      </Router>
+    </ToastProvider>
   );
 }
 
