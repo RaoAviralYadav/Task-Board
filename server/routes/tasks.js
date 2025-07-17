@@ -95,6 +95,32 @@ router.get("/group/:groupId", auth, async (req, res) => {
   res.json(tasks);
 });
 
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    const task = await Task.findByIdAndDelete(req.params.id);
+    if (!task) return res.status(404).json({ message: "Task not found" });
+
+    const io = req.io;
+    if (io) io.emit("taskDeleted", { taskId: req.params.id });
+
+    res.json({ message: "Task deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete task" });
+  }
+});
+
+// 🔹 Delete all tasks in a specific column of a group
+router.delete("/group/:groupId/status/:status", auth, async (req, res) => {
+  try {
+    const { groupId, status } = req.params;
+    const result = await Task.deleteMany({ groupId, status });
+    res.json({ message: `${result.deletedCount} tasks deleted` });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete tasks in column" });
+  }
+});
+
+
 // 🔹 Smart Assign Task
 router.post("/:id/assign-smart", auth, async (req, res) => {
   try {

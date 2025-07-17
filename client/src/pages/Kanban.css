@@ -122,3 +122,19 @@
 .delete-column-btn:hover {
   color: red;
 }
+
+
+.kanban-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+}
+
+.delete-task-btn {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 14px;
+}

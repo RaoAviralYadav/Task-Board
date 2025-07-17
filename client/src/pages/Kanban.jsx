@@ -5,22 +5,7 @@
 // import "./Kanban.css";
 // import StrictModeDroppable from "../components/StrictModeDroppable";
 // import TaskModal from "../components/TaskModal";
-// import socket from "../socket";
-
-// // Optional: you can use any toast library, here’s a quick one
-// const showToast = (msg) => {
-//   const toast = document.createElement("div");
-//   toast.className = "realtime-toast";
-//   toast.innerText = msg;
-//   document.body.appendChild(toast);
-//   setTimeout(() => {
-//     toast.classList.add("show");
-//     setTimeout(() => {
-//       toast.classList.remove("show");
-//       setTimeout(() => toast.remove(), 500);
-//     }, 3000);
-//   }, 100);
-// };
+// import { io } from "socket.io-client"; // 👈 NEW
 
 // export default function Kanban() {
 //   const [selectedTask, setSelectedTask] = useState(null);
@@ -42,8 +27,9 @@
 
 //   const [newTaskTitles, setNewTaskTitles] = useState({});
 //   const [newListName, setNewListName] = useState("");
+//   const [socket] = useState(() => io("http://localhost:5000")); // 👈 your backend URL
 
-//   // 📥 Fetch tasks
+//   // 🧠 Fetch tasks on load or status change
 //   useEffect(() => {
 //     const fetchTasks = async () => {
 //       const res = await API.get(`/tasks/group/${groupId}`);
@@ -60,54 +46,29 @@
 //     fetchTasks();
 //   }, [groupId, statuses]);
 
-//   // 🔌 Real-time listeners
+//   // 🔌 Real-time sync listener
 //   useEffect(() => {
-//     socket.on("task-created", (task) => {
-//       if (task.groupId === groupId) {
-//         setColumns((prev) => ({
-//           ...prev,
-//           [task.status]: [...(prev[task.status] || []), task],
-//         }));
-//         showToast("📌 New task created");
-//       }
-//     });
+//     socket.on("taskUpdated", (updatedTask) => {
+//       if (updatedTask.groupId !== groupId) return; // prevent cross-group updates
 
-//     socket.on("task-updated", (updatedTask) => {
-//       if (updatedTask.groupId !== groupId) return;
 //       setColumns((prevCols) => {
 //         const newCols = { ...prevCols };
-//         Object.keys(newCols).forEach(
-//           (colId) =>
-//             (newCols[colId] = newCols[colId].filter((t) => t._id !== updatedTask._id))
-//         );
+
+//         // Remove task from all columns
+//         Object.keys(newCols).forEach((colId) => {
+//           newCols[colId] = newCols[colId].filter((t) => t._id !== updatedTask._id);
+//         });
+
+//         // Add to correct column
 //         if (!newCols[updatedTask.status]) newCols[updatedTask.status] = [];
 //         newCols[updatedTask.status].push(updatedTask);
+
 //         return newCols;
 //       });
-//       showToast("✏️ Task updated");
 //     });
 
-//     socket.on("task-assigned", (updatedTask) => {
-//       if (updatedTask.groupId !== groupId) return;
-//       setColumns((prev) => {
-//         const newCols = { ...prev };
-//         const list = [...newCols[updatedTask.status]];
-//         const idx = list.findIndex((t) => t._id === updatedTask._id);
-//         if (idx !== -1) {
-//           list[idx] = updatedTask;
-//           newCols[updatedTask.status] = list;
-//         }
-//         return newCols;
-//       });
-//       showToast("🤖 Smart assigned");
-//     });
-
-//     return () => {
-//       socket.off("task-created");
-//       socket.off("task-updated");
-//       socket.off("task-assigned");
-//     };
-//   }, [groupId]);
+//     return () => socket.disconnect(); // cleanup
+//   }, [socket, groupId]);
 
 //   const deleteColumn = (columnId) => {
 //     setStatuses((prev) => prev.filter((s) => s.id !== columnId));
@@ -152,6 +113,7 @@
 
 //       try {
 //         await API.put(`/tasks/${updatedTask._id}`, { status: updatedTask.status });
+//         // Don't emit here — server will emit after save
 //       } catch (err) {
 //         console.error("Failed to update task status", err);
 //       }
@@ -162,6 +124,7 @@
 //     const title = (newTaskTitles[status] || "").trim();
 //     if (!title) return;
 
+//     // 🚫 Validation against column titles (case-insensitive)
 //     const forbiddenTitles = statuses.map((s) => s.title.toLowerCase());
 //     if (forbiddenTitles.includes(title.toLowerCase())) {
 //       alert("⚠️ Task title cannot match a column name.");
@@ -171,9 +134,12 @@
 //     const task = { title, status, groupId, priority: "medium" };
 
 //     try {
-//       await API.post("/tasks", task);
+//       const res = await API.post("/tasks", task);
+//       setColumns((prev) => ({
+//         ...prev,
+//         [status]: [...prev[status], res.data],
+//       }));
 //       setNewTaskTitles((prev) => ({ ...prev, [status]: "" }));
-//       // No need to update state manually — real-time will catch it
 //     } catch (err) {
 //       if (err.response?.status === 409) {
 //         alert("⚠️ A task with this title already exists in this group.");
@@ -276,9 +242,16 @@
 //           onClose={() => setSelectedTask(null)}
 //           onSave={async (updatedTask) => {
 //             try {
-//               await API.put(`/tasks/${updatedTask._id}`, updatedTask);
+//               const res = await API.put(`/tasks/${updatedTask._id}`, updatedTask);
+//               setColumns((prev) => {
+//                 const newCols = { ...prev };
+//                 const list = [...newCols[updatedTask.status]];
+//                 const idx = list.findIndex((t) => t._id === updatedTask._id);
+//                 if (idx !== -1) list[idx] = res.data;
+//                 newCols[updatedTask.status] = list;
+//                 return newCols;
+//               });
 //               setSelectedTask(null);
-//               // No need to manually update state — real-time will handle it
 //             } catch (err) {
 //               console.error("Failed to update task", err);
 //             }
@@ -289,9 +262,6 @@
 //   );
 // }
 
-
-
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import API from "../services/api";
@@ -299,31 +269,44 @@ import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import "./Kanban.css";
 import StrictModeDroppable from "../components/StrictModeDroppable";
 import TaskModal from "../components/TaskModal";
-import { io } from "socket.io-client"; // 👈 NEW
+import { io } from "socket.io-client";
 
 export default function Kanban() {
   const [selectedTask, setSelectedTask] = useState(null);
   const { groupId } = useParams();
 
+  // const defaultStatuses = [
+  //   { id: "todo", title: "To Do" },
+  //   { id: "inprogress", title: "In Progress" },
+  //   { id: "done", title: "Done" },
+  // ];
+
+  // const [statuses, setStatuses] = useState(defaultStatuses);
   const defaultStatuses = [
     { id: "todo", title: "To Do" },
     { id: "inprogress", title: "In Progress" },
     { id: "done", title: "Done" },
   ];
 
-  const [statuses, setStatuses] = useState(defaultStatuses);
+  const [statuses, setStatuses] = useState(() => {
+    const saved = localStorage.getItem(`kanban-statuses-${groupId}`);
+    return saved ? JSON.parse(saved) : defaultStatuses;
+  });
+  useEffect(() => {
+  localStorage.setItem(`kanban-statuses-${groupId}`, JSON.stringify(statuses));
+}, [statuses, groupId]);
+
+
   const [columns, setColumns] = useState(() =>
     defaultStatuses.reduce((acc, s) => {
       acc[s.id] = [];
       return acc;
     }, {})
   );
-
   const [newTaskTitles, setNewTaskTitles] = useState({});
   const [newListName, setNewListName] = useState("");
-  const [socket] = useState(() => io("http://localhost:5000")); // 👈 your backend URL
+  const [socket] = useState(() => io("http://localhost:5000"));
 
-  // 🧠 Fetch tasks on load or status change
   useEffect(() => {
     const fetchTasks = async () => {
       const res = await API.get(`/tasks/group/${groupId}`);
@@ -340,37 +323,59 @@ export default function Kanban() {
     fetchTasks();
   }, [groupId, statuses]);
 
-  // 🔌 Real-time sync listener
   useEffect(() => {
     socket.on("taskUpdated", (updatedTask) => {
-      if (updatedTask.groupId !== groupId) return; // prevent cross-group updates
+      if (updatedTask.groupId !== groupId) return;
 
       setColumns((prevCols) => {
         const newCols = { ...prevCols };
-
-        // Remove task from all columns
         Object.keys(newCols).forEach((colId) => {
           newCols[colId] = newCols[colId].filter((t) => t._id !== updatedTask._id);
         });
-
-        // Add to correct column
         if (!newCols[updatedTask.status]) newCols[updatedTask.status] = [];
         newCols[updatedTask.status].push(updatedTask);
-
         return newCols;
       });
     });
 
-    return () => socket.disconnect(); // cleanup
+    socket.on("taskDeleted", ({ taskId }) => {
+      setColumns((prevCols) => {
+        const updated = {};
+        for (const col in prevCols) {
+          updated[col] = prevCols[col].filter((t) => t._id !== taskId);
+        }
+        return updated;
+      });
+    });
+
+    return () => socket.disconnect();
   }, [socket, groupId]);
 
-  const deleteColumn = (columnId) => {
-    setStatuses((prev) => prev.filter((s) => s.id !== columnId));
-    setColumns((prev) => {
-      const updated = { ...prev };
-      delete updated[columnId];
-      return updated;
-    });
+  const deleteColumn = async (columnId) => {
+    try {
+      await API.delete(`/tasks/group/${groupId}/status/${columnId}`);
+      setStatuses((prev) => prev.filter((s) => s.id !== columnId));
+      setColumns((prev) => {
+        const updated = { ...prev };
+        delete updated[columnId];
+        return updated;
+      });
+    } catch (err) {
+      alert("Failed to delete column tasks.");
+    }
+  };
+
+  const deleteTask = async (taskId, status) => {
+    try {
+      await API.delete(`/tasks/${taskId}`);
+      setColumns((prev) => {
+        const updated = { ...prev };
+        updated[status] = updated[status].filter((t) => t._id !== taskId);
+        return updated;
+      });
+    } catch (err) {
+      alert("Failed to delete task.");
+    }
   };
 
   const onDragEnd = async (result) => {
@@ -407,7 +412,6 @@ export default function Kanban() {
 
       try {
         await API.put(`/tasks/${updatedTask._id}`, { status: updatedTask.status });
-        // Don't emit here — server will emit after save
       } catch (err) {
         console.error("Failed to update task status", err);
       }
@@ -418,7 +422,6 @@ export default function Kanban() {
     const title = (newTaskTitles[status] || "").trim();
     if (!title) return;
 
-    // 🚫 Validation against column titles (case-insensitive)
     const forbiddenTitles = statuses.map((s) => s.title.toLowerCase());
     if (forbiddenTitles.includes(title.toLowerCase())) {
       alert("⚠️ Task title cannot match a column name.");
@@ -491,7 +494,17 @@ export default function Kanban() {
                           {...prov.dragHandleProps}
                           onClick={() => setSelectedTask(task)}
                         >
-                          {task.title}
+                          <span>{task.title}</span>
+                          <button
+                            className="delete-task-btn"
+                            title="Delete Task"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteTask(task._id, id);
+                            }}
+                          >
+                            🗑️
+                          </button>
                         </div>
                       )}
                     </Draggable>
