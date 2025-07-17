@@ -12,11 +12,11 @@ html, body, #root {
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #656769;
+  /* background-color: #656769; */
 }
 
-.home-page {
-  height: calc(100vh - 60px); /* navbar height subtraction */
+/* .home-page {
+  height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,19 +24,20 @@ body {
   text-align: center;
   color: #1e2a38;
   width: 100%;
-}
+} */
+
 .home-page h1 {
   font-size: 48px;
   margin-bottom: 20px;
 }
 
-.btn-group {
+/* .btn-group {
   margin-top: 20px;
   display: flex;
   gap: 20px;
-}
+} */
 
-.home-btn {
+/* .home-btn {
   padding: 10px 24px;
   font-size: 16px;
   background-color: #1e2a38;
@@ -45,10 +46,10 @@ body {
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-}
+} */
 
-.home-btn:hover {
+/* .home-btn:hover {
   background-color: #00bcd4;
   transform: scale(1.05);
   color: #1e2a38;
-}
+} */

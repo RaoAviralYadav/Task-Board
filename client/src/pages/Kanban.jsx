@@ -353,6 +353,8 @@ export default function Kanban() {
     return saved ? JSON.parse(saved) : defaultStatuses;
   });
 
+  const [groupName, setGroupName] = useState("My Board");
+
   useEffect(() => {
     localStorage.setItem(`kanban-statuses-${groupId}`, JSON.stringify(statuses));
   }, [statuses, groupId]);
@@ -367,37 +369,81 @@ export default function Kanban() {
   const [newListName, setNewListName] = useState("");
   const [socket] = useState(() => io("http://localhost:5000"));
 
+  // useEffect(() => {
+  //   const fetchTasks = async () => {
+  //     const res = await API.get(`/tasks/group/${groupId}`);
+  //     const taskList = res.data;
+
+  //     const currentStatusIds = new Set(statuses.map((s) => s.id));
+  //     const dynamicStatuses = [...statuses];
+
+  //     taskList.forEach((task) => {
+  //       if (!currentStatusIds.has(task.status)) {
+  //         const newStatus = {
+  //           id: task.status,
+  //           title: task.status.charAt(0).toUpperCase() + task.status.slice(1),
+  //         };
+  //         dynamicStatuses.push(newStatus);
+  //         currentStatusIds.add(task.status);
+  //       }
+  //     });
+
+  //     setStatuses(dynamicStatuses);
+
+  //     const base = {};
+  //     dynamicStatuses.forEach((s) => (base[s.id] = []));
+  //     taskList.forEach((task) => {
+  //       base[task.status].push(task);
+  //     });
+
+  //     setColumns(base);
+  //   };
+
+  //   fetchTasks();
+  // }, [groupId]);
+
+
   useEffect(() => {
-    const fetchTasks = async () => {
-      const res = await API.get(`/tasks/group/${groupId}`);
-      const taskList = res.data;
+    const fetchTasksAndGroup = async () => {
+      try {
+        // Fetch tasks
+        const taskRes = await API.get(`/tasks/group/${groupId}`);
+        const taskList = taskRes.data;
 
-      const currentStatusIds = new Set(statuses.map((s) => s.id));
-      const dynamicStatuses = [...statuses];
+        const currentStatusIds = new Set(statuses.map((s) => s.id));
+        const dynamicStatuses = [...statuses];
 
-      taskList.forEach((task) => {
-        if (!currentStatusIds.has(task.status)) {
-          const newStatus = {
-            id: task.status,
-            title: task.status.charAt(0).toUpperCase() + task.status.slice(1),
-          };
-          dynamicStatuses.push(newStatus);
-          currentStatusIds.add(task.status);
-        }
-      });
+        taskList.forEach((task) => {
+          if (!currentStatusIds.has(task.status)) {
+            const newStatus = {
+              id: task.status,
+              title: task.status.charAt(0).toUpperCase() + task.status.slice(1),
+            };
+            dynamicStatuses.push(newStatus);
+            currentStatusIds.add(task.status);
+          }
+        });
 
-      setStatuses(dynamicStatuses);
+        setStatuses(dynamicStatuses);
 
-      const base = {};
-      dynamicStatuses.forEach((s) => (base[s.id] = []));
-      taskList.forEach((task) => {
-        base[task.status].push(task);
-      });
+        const base = {};
+        dynamicStatuses.forEach((s) => (base[s.id] = []));
+        taskList.forEach((task) => {
+          base[task.status].push(task);
+        });
 
-      setColumns(base);
+        setColumns(base);
+
+        // Fetch group name
+        const groupRes = await API.get(`/groups/${groupId}`);
+        setGroupName(groupRes.data.name || {groupName});
+
+      } catch (err) {
+        console.error("Error fetching tasks or group name:", err);
+      }
     };
 
-    fetchTasks();
+    fetchTasksAndGroup();
   }, [groupId]);
 
   useEffect(() => {
@@ -543,7 +589,7 @@ export default function Kanban() {
   return (
     <div className="kanban-page">
       <header className="kanban-header">
-        <h2>My Board</h2>
+        <h2>{groupName}</h2>
       </header>
 
       <DragDropContext onDragEnd={onDragEnd}>

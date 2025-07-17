@@ -106,7 +106,7 @@ function Board() {
   const [groups, setGroups] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1200);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 1200); // auto open on desktop
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -150,7 +150,6 @@ function Board() {
     <div className="board-wrapper">
       <div className={`board-page-container ${sidebarOpen ? 'with-sidebar' : 'full-width'}`}>
         <div className="board-page-header">
-          <button className="hamburger" onClick={() => setSidebarOpen(true)}>☰</button>
           <h2>Your Boards</h2>
         </div>
 

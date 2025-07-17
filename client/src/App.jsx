@@ -9,7 +9,6 @@ import './App.css';
 import Kanban from './pages/Kanban';
 import { ToastProvider } from "./components/ToastContext";
 
-
 function App() {
   return (
     <ToastProvider>

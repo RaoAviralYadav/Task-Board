@@ -1,7 +1,10 @@
 /* Container */
 .kanban-page {
   padding: 1.5rem;
-  background-color: #fff;
+  background-image: url('/1.jpg'); /* 👈 FIXED path */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -13,7 +16,8 @@
 .kanban-header h2 {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: #fff; /* Changed to white for contrast */
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
 }
 
 /* Columns Grid (Responsive like Board) */
@@ -25,13 +29,15 @@
 
 /* Column Style */
 .kanban-column {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.75); /* translucent */
+  backdrop-filter: blur(6px);
   border-radius: 8px;
   min-height: 400px;
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease;
 }
 
 /* Column Header */
@@ -62,11 +68,10 @@
 
 /* Task Card */
 .kanban-card {
-  background: #ffffff;
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.85); 
   padding: 0.75rem;
   margin-top: 0.75rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
   cursor: grab;
   font-size: 14px;
   font-weight: 500;
@@ -82,6 +87,9 @@
   color: #fff;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
+
+
+
 
 /* Delete Task Button */
 .delete-task-btn {
@@ -111,16 +119,17 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 0.6rem;
-  background: #eef5ff;
+  background: rgba(238, 245, 255, 0.75);
   border: 2px dashed #007bff;
   border-radius: 8px;
   padding: 1rem;
   text-align: center;
   align-items: center;
+  backdrop-filter: blur(6px);
   transition: all 0.3s ease;
 }
 .add-list-column:hover {
-  background-color: #ddeeff;
+  background-color: rgba(221, 238, 255, 0.85);
   transform: translateY(-3px);
 }
 .add-list-column input {

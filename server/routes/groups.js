@@ -38,7 +38,7 @@
 const express = require("express");
 const router = express.Router();
 const Group = require("../models/Group");
-const Task = require("../models/Task"); 
+const Task = require("../models/Task");
 const auth = require("../middleware/auth");
 
 // Get all groups
@@ -86,5 +86,17 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ message: "Failed to delete group" });
   }
 });
+
+// Get a single group by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const group = await Group.findById(req.params.id);
+    if (!group) return res.status(404).json({ message: "Group not found" });
+    res.json(group);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching group" });
+  }
+});
+
 
 module.exports = router;

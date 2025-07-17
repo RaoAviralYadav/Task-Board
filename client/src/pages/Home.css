@@ -1,4 +1,4 @@
-.home-page {
+/* .home-page {
   flex: 1;
   display: flex;
   justify-content: center;
@@ -64,4 +64,107 @@
 .home-btn-outline:hover {
   background-color: #1e2a38;
   color: white;
+} */
+.home-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+/* 🎥 Video background */
+.home-page video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* 💠 Card Style Content */
+.home-container {
+  text-align: center;
+  max-width: 640px;
+  padding: 60px 40px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  position: relative;
+  top: -40px; /* Shift card slightly higher */
+}
+
+/* Heading */
+.home-container h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Highlight Color */
+.home-container .highlight {
+  color: #00e1ff;
+}
+
+/* Subtext */
+.home-container p {
+  font-size: 18px;
+  color: #1e2a38;
+  margin-bottom: 36px;
+  line-height: 1.5;
+  text-shadow: 1px 1px 2px rgba(73, 70, 70, 0.8);
+  font-weight: 500;
+}
+
+/* Buttons Group */
+.btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.home-btn {
+  padding: 12px 28px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #00bcd4;
+  color: #fff;
+  box-shadow: 0 6px 12px rgba(0, 188, 212, 0.3);
+}
+
+.home-btn:hover {
+  background-color: #00e1ff;
+  color: #1e2a38;
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Outline version */
+.home-btn-outline {
+  background: transparent;
+  border: 2px solid #00bcd4;
+  color: #00e1ff;
+}
+
+.home-btn-outline:hover {
+  background-color: #00bcd4;
+  color: #fff;
+  border-color: #00e1ff;
+  transform: scale(1.05);
 }
