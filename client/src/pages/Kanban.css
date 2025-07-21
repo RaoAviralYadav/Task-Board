@@ -16,11 +16,11 @@
 .kanban-header h2 {
   font-size: 24px;
   font-weight: 600;
-  color: #fff; /* Changed to white for contrast */
+  color: #fff;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
 }
 
-/* Columns Grid (Responsive like Board) */
+
 .kanban-columns {
   display: grid;
   gap: 1rem;
@@ -29,7 +29,7 @@
 
 /* Column Style */
 .kanban-column {
-  background: rgba(255, 255, 255, 0.75); /* translucent */
+  background: rgba(255, 255, 255, 0.75); 
   backdrop-filter: blur(6px);
   border-radius: 8px;
   min-height: 400px;

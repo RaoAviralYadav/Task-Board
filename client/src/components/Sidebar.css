@@ -1,4 +1,4 @@
-/* === Common Sidebar === */
+
 .sidebar {
   position: fixed;
   top: 0;
@@ -14,7 +14,7 @@
   transition: transform 0.3s ease;
 }
 
-/* === Desktop (≥1200px) === */
+
 @media (min-width: 1200px) {
   .sidebar {
     transform: translateX(0%) !important;
@@ -28,7 +28,7 @@
   }
 }
 
-/* === Mobile (≤1199px) === */
+
 @media (max-width: 1199px) {
   .sidebar {
     width: 50%;

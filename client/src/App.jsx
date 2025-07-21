@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
-import Board from "./pages/Board.jsx"; // Placeholder
+import Board from "./pages/Board.jsx"; 
 import Home from "./pages/Home.jsx";
 import './App.css';
 import Kanban from './pages/Kanban';

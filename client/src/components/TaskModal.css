@@ -23,17 +23,6 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
-/* .close-btn {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.8rem;
-  font-size: 1.2rem;
-  background: none;
-  border: none;
-  color: #444;
-  cursor: pointer;
-} */
-
 .close-btn {
   position: absolute;
   top: 0.5rem;
@@ -50,7 +39,7 @@
 
 .close-btn:hover {
   color: #e53935;
-  /* red on hover */
+  
 }
 
 .modal-header {
